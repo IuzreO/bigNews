@@ -9,7 +9,8 @@ $(function () {
         let password = $('.input_pass').val().trim()
         //4.非空判断
         if (username == '' || password == '') {
-            alert('账号密码不能为空');
+            $('#myModal').modal()
+            $('.modal-body>p').text('帐号或密码不能为空')
         } else {
             // 发送ajax请求
             $.ajax({
@@ -20,9 +21,12 @@ $(function () {
                     password
                 },
                 success: function (backData) {
-                    alert(backData.msg);
+                    $('#myModal').modal()
+                    $('.modal-body>p').text(backData.msg)
                     if (backData.code == 200) {
-                        location.href = './index.html'
+                        $('#myModal').on('hidden.bs.modal', function (e) {
+                            location.href = './index.html'
+                        })
                     }
                 }
             });
