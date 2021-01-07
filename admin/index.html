@@ -78,6 +78,13 @@
                     }
                 }
             })
+            $('.logout').click(function () {
+                confirm('确定退出')
+                headers: {
+                    Authorization: localStorage.removeItem('token')
+                }
+                location.href = './login.html'
+            })
         })
 
     </script>
