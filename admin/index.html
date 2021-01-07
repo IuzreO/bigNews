@@ -54,5 +54,33 @@
 
         </div>
     </div>
+    <script>
+        //入口函数
+        $(function () {
+            // 1.发送ajax请求
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/admin/user/info',
+                type: 'get',
+                //获取服务器返回的token添加到headers
+                headers: {
+                    Authorization: localStorage.getItem('token')
+                },
+                success: function (backData) {
+                    //将获取的后台数据渲染到页面上
+                    $('.user_info>img').attr('src', backData.data.userPic)
+                    $('.user_info>span').text('欢迎 ' + backData.data.nickname)
+                    $('.user_center_link>img').attr('src', backData.data.userPic)
+                },
+                error: function (xhr, status, error) {
+                    if (error == 'Forbidden') {
+                        alert('请登录');
+                        location.href = './login.html'
+                    }
+                }
+            })
+        })
+
+    </script>
 </body>
+
 </html>
