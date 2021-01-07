@@ -14,7 +14,7 @@ $(function () {
         } else {
             // 5.发送ajax请求
             $.ajax({
-                url: 'http://localhost:8080/api/v1/admin/user/login',
+                url: BigNew.user_login,
                 type: 'post',
                 data: {
                     username,

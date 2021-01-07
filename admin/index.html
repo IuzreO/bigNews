@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/iconfont.css">
     <link rel="stylesheet" href="css/main.css">
+    <!-- 导入接口地址文件 -->
+    <script src="./js/http.js"></script>
     <script src="./libs/jquery-1.12.4.min.js"></script>
     <!-- 导入bootstrap的js文件 -->
     <script src="./libs/bootstrap/js/bootstrap.min.js"></script>
@@ -59,14 +61,14 @@
         $(function () {
             // 1.发送ajax请求
             $.ajax({
-                url: 'http://localhost:8080/api/v1/admin/user/info',
+                url: BigNew.user_info,
                 type: 'get',
-                //获取服务器返回的token添加到headers
+                //2.获取服务器返回的token添加到headers
                 headers: {
                     Authorization: localStorage.getItem('token')
                 },
                 success: function (backData) {
-                    //将获取的后台数据渲染到页面上
+                    //3.将获取的后台数据渲染到页面上
                     $('.user_info>img').attr('src', backData.data.userPic)
                     $('.user_info>span').text('欢迎 ' + backData.data.nickname)
                     $('.user_center_link>img').attr('src', backData.data.userPic)
@@ -79,11 +81,12 @@
                 }
             })
             $('.logout').click(function () {
-                confirm('确定退出')
-                headers: {
+                if (confirm('确定退出')) {
+                    //4.退出登录删除token
                     Authorization: localStorage.removeItem('token')
+                    location.href = './login.html'
                 }
-                location.href = './login.html'
+
             })
         })
 
