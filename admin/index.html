@@ -64,21 +64,23 @@
                 url: BigNew.user_info,
                 type: 'get',
                 //2.获取服务器返回的token添加到headers
-                headers: {
-                    Authorization: localStorage.getItem('token')
-                },
+                // 已封装到jq文件中
+                // headers: {
+                //     Authorization: localStorage.getItem('token')
+                // },
                 success: function (backData) {
                     //3.将获取的后台数据渲染到页面上
                     $('.user_info>img').attr('src', backData.data.userPic)
                     $('.user_info>span').text('欢迎 ' + backData.data.nickname)
                     $('.user_center_link>img').attr('src', backData.data.userPic)
                 },
-                error: function (xhr, status, error) {
-                    if (error == 'Forbidden') {
-                        alert('请登录');
-                        location.href = './login.html'
-                    }
-                }
+                // 已封装到jq文件中
+                // error: function (xhr, status, error) {
+                //     if (error == 'Forbidden') {
+                //         alert('请登录');
+                //         location.href = './login.html'
+                //     }
+                // }
             })
             $('.logout').click(function () {
                 if (confirm('确定退出')) {
