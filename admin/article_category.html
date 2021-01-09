@@ -14,6 +14,9 @@
     <script src="./libs/bootstrap/js/bootstrap.min.js"></script>
     <!-- 引入模板引擎js文件 -->
     <script src="./libs/template-web.js"></script>
+    <!-- 引入js文件 -->
+    <script src="./js/article_category.js"></script>
+    <script src="./js/http.js"></script>
 </head>
 
 <body>
@@ -51,5 +54,34 @@
             </table>
         </div>
     </div>
+    <!-- 模版引擎 -->
+    <script id="tmp" type="text/html">
+        {{each  data v}}
+        <tr>
+            <td>{{v.name}}</td>
+            <td>{{v.slug}}</td>
+            <td class="text-center">
+                <a href="javascript:void(0)" data-toggle="modal" class=" btn btn-info btn-xs" data-id={{v.id}}>编辑</a>
+                <a href="javascript:void(0)" class="btn btn-danger btn-xs">删除</a>
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+    <script>
+        //入口函数
+        $(function () {
+            //发送ajax请求 将返回的数据显示在页面
+            $.ajax({
+                url: BigNew.category_list,
+                type: 'get',
+                dataType: 'json',
+                success: function (backData) {
+                    let res = template('tmp', backData)
+                    //将返回到模板引擎的数据渲染到页面
+                    $('tbody').append(res)
+                }
+            });
+        })
+    </script>
 
 </html>
