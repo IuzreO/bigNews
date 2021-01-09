@@ -15,8 +15,8 @@
     <!-- 引入模板引擎js文件 -->
     <script src="./libs/template-web.js"></script>
     <!-- 引入js文件 -->
-    <script src="./js/article_category.js"></script>
     <script src="./js/http.js"></script>
+
 </head>
 
 <body>
@@ -38,7 +38,7 @@
                         <td>奇趣事</td>
                         <td>funny</td>
                         <td class="text-center">
-                            <a href="javascript:void(0)" data-toggle="modal" class=" btn btn-info btn-xs">编辑</a>
+                            <a href="javascript:void(0)" class=" btn btn-info btn-xs">编辑</a>
                             <a href="javascript:void(0)" class="btn btn-danger btn-xs">删除</a>
                         </td>
                     </tr>
@@ -46,7 +46,7 @@
                 <tfoot>
                     <tr>
                         <td colspan="3" class="text-center">
-                            <a href="javascript:void(0)" class="btn btn-success" id="xinzengfenlei" data-toggle="modal"
+                            <a class="btn btn-success" id="xinzengfenlei" data-toggle="modal" href="#myModal"
                                 data-target="#myModal">新增分类</a>
                         </td>
                     </tr>
@@ -54,14 +54,41 @@
             </table>
         </div>
     </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">New message</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">文章分类名称</label>
+                            <input type="text" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">文章分类别名</label>
+                            <input class="form-control" id="message-text"></input>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary btn-save">Send message</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- 模版引擎 -->
     <script id="tmp" type="text/html">
-        {{each  data v}}
+        {{each data v}}
         <tr>
             <td>{{v.name}}</td>
             <td>{{v.slug}}</td>
             <td class="text-center">
-                <a href="javascript:void(0)" data-toggle="modal" class=" btn btn-info btn-xs" data-id={{v.id}}>编辑</a>
+                <a  data-toggle="modal" data-target="#myModal" href="#myModal" class=" btn btn-info btn-xs btn-edit" data-id={{v.id}}>编辑</a>
                 <a href="javascript:void(0)" class="btn btn-danger btn-xs">删除</a>
             </td>
         </tr>
@@ -71,16 +98,72 @@
         //入口函数
         $(function () {
             //发送ajax请求 将返回的数据显示在页面
-            $.ajax({
-                url: BigNew.category_list,
-                type: 'get',
-                dataType: 'json',
-                success: function (backData) {
-                    let res = template('tmp', backData)
-                    //将返回到模板引擎的数据渲染到页面
-                    $('tbody').append(res)
+            //封装成函数
+            function loadList() {
+
+                $.ajax({
+                    url: BigNew.category_list,
+                    type: 'get',
+                    dataType: 'json',
+                    success: function (backData) {
+                        let res = template('tmp', backData)
+                        //将返回到模板引擎的数据渲染到页面
+                        $('tbody').html(res)
+                    }
+                });
+            }
+            //进入页面调用一次
+            loadList()
+            //模态框添加即将显示的事件
+            $('#myModal').on('show.bs.modal', function (e) {
+                //找到是点击那个元素显示的模态框 ps:得到的是DOM对象
+                //show 方法调用之后立即触发该事件。如果是通过点击某个作为触发器的元素，则此元素可以通过事件的 relatedTarget 属性进行访问。
+
+                console.log(e.relatedTarget);
+                // 判断找到的是编辑按钮还是新增按钮
+                if (e.relatedTarget.innerText == '新增分类') {
+                    //修改模态框中的文字
+                    $('#myModalLabel').text("新增类别")
+                    $('.btn-save').text('新增').addClass('btn-success').removeClass('btn-primary')
+                } else {
+                    //修改模态框中的文字
+                    $('#myModalLabel').text("编辑类别")
+                    $('.btn-save').text('编辑').addClass('btn-primary').removeClass('btn-success')
+                    let slug = $(e.relatedTarget).parent().prev().text()
+                    let name = $(e.relatedTarget).parent().prev().prev().text()
+                    $('#recipient-name').val(slug)
+                    $('#message-text').val(name)
                 }
-            });
+            })
+            //设置模态框点击事件
+            $('.btn-save').click(function () {
+                //判断为新增分类还是编辑
+                if ($(this).text() == '新增') {
+                    //获取文本框输入内容
+                    let name = $('#recipient-name').val().trim()
+                    let slug = $('#message-text').val().trim()
+                    console.log(name, slug);
+                    //非空判断
+                    if (name == '' || slug == '') {
+                        alert('名称或者别名不能为空');
+                        return
+                    }
+                    $.ajax({
+                        url: BigNew.category_add,
+                        type: 'post',
+                        data: {
+                            name, slug
+                        },
+                        success: function (backData) {
+                            alert('新增成功');
+                            $('#myModal').modal('hide')
+                            //重新加载数据
+                            loadList()
+                        }
+                    });
+                } else {
+                }
+            })
         })
     </script>
 
