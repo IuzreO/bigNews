@@ -64,13 +64,15 @@
                 </div>
                 <div class="modal-body">
                     <form>
+                        <!-- 设置一个隐藏域 存放ID-->
+                        <input type="hidden" name="id" id='data-id'>
                         <div class="form-group">
                             <label for="recipient-name" class="control-label">文章分类名称</label>
-                            <input type="text" class="form-control" id="recipient-name">
+                            <input type="text" class="form-control" id="recipient-name" name='name'>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="control-label">文章分类别名</label>
-                            <input class="form-control" id="message-text"></input>
+                            <input class="form-control" id="message-text" name='slug'></input>
                         </div>
                     </form>
                 </div>
@@ -118,8 +120,6 @@
             $('#myModal').on('show.bs.modal', function (e) {
                 //找到是点击那个元素显示的模态框 ps:得到的是DOM对象
                 //show 方法调用之后立即触发该事件。如果是通过点击某个作为触发器的元素，则此元素可以通过事件的 relatedTarget 属性进行访问。
-
-                console.log(e.relatedTarget);
                 // 判断找到的是编辑按钮还是新增按钮
                 if (e.relatedTarget.innerText == '新增分类') {
                     //修改模态框中的文字
@@ -131,9 +131,20 @@
                     $('.btn-save').text('编辑').addClass('btn-primary').removeClass('btn-success')
                     let slug = $(e.relatedTarget).parent().prev().text()
                     let name = $(e.relatedTarget).parent().prev().prev().text()
-                    $('#recipient-name').val(slug)
-                    $('#message-text').val(name)
+                    $('#recipient-name').val(name)
+                    $('#message-text').val(slug)
+                    //取e.relatedTarget.data()自定义属性中的id
+                    let id = $(e.relatedTarget).data().id
+                    $('#data-id').val(id)
                 }
+            })
+            //模态框消失之后清空内容 此事件在模态框被隐藏（并且同时在 CSS 过渡效果完成）之后被触发。
+            $('#myModal').on('hidden.bs.modal', function (e) {
+                //方法一
+                // $('#recipient-name').val("")
+                // $('#message-text').val("")
+                //方法二 找到表单,表单的DOM对象中有一个方法reset():重置,调用这个方法会重置为默认值
+                $('.modal-body form')[0].reset()
             })
             //设置模态框点击事件
             $('.btn-save').click(function () {
@@ -142,7 +153,6 @@
                     //获取文本框输入内容
                     let name = $('#recipient-name').val().trim()
                     let slug = $('#message-text').val().trim()
-                    console.log(name, slug);
                     //非空判断
                     if (name == '' || slug == '') {
                         alert('名称或者别名不能为空');
@@ -162,6 +172,25 @@
                         }
                     });
                 } else {
+                    // 方法一
+                    // let id = $('#data-id').val()
+                    // let name = $('#recipient-name').val().trim()
+                    // let slug = $('#message-text').val().trim()
+                    // 方法二
+                    //serialize方法可以获取除了文件以外所有的form数据
+                    let data = $('.modal-body>form').serialize()
+                    //发送ajax请求
+                    $.ajax({
+                        url: BigNew.category_edit,
+                        type: 'post',
+                        data: data,
+                        success: function (backData) {
+                            alert('修改成功');
+                            $('#myModal').modal('hide')
+                            //重新加载数据
+                            loadList()
+                        }
+                    });
                 }
             })
         })
