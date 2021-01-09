@@ -1,3 +1,4 @@
+// require('jQuery')
 //入口函数
 $(function () {
     // 1.发送ajax请求
@@ -31,5 +32,18 @@ $(function () {
             location.href = './login.html'
         }
 
+    })
+    //一级导航导航栏切换实现高亮
+    $('.level01').click(function () {
+        $(this).addClass('active').siblings().removeClass('active')
+        // 二级导航实现效果
+        if (this == $('.level01')[1]) {
+            $('.level02').slideToggle()
+            $('.icon-arrowdownl').toggleClass('rotate0')
+        }
+    })
+    //二级导航点击实现高亮
+    $('.level02 li').click(function () {
+        $(this).addClass('active').siblings().removeClass('active')
     })
 })
