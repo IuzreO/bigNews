@@ -11,7 +11,9 @@
     <link rel="stylesheet" href="css/iconfont.css">
     <link rel="stylesheet" href="css/main.css">
     <script src="./libs/jquery-1.12.4.min.js"></script>
-
+    <!-- 导入JS文件 -->
+    <script src="./js/http.js"></script>
+    <script src="./js/user.js"></script>
 </head>
 
 <body>
@@ -44,7 +46,7 @@
                     <label for="inputPassword3" class="col-sm-2 control-label">用户图标：</label>
                     <div class="col-sm-10">
                         <img src="images/2.jpg" alt="" class="user_pic">
-                        <input style="display: block" name="userPic" type="file" id="exampleInputFile">
+                        <input style="display: none" name="userPic" type="file" id="exampleInputFile">
                         <!-- 给label标签的for属性赋值,值是input标签的id,那这样的话点击label就相当于点击了input -->
                         <br>
                         <label for="exampleInputFile">
@@ -68,6 +70,38 @@
             </form>
         </div>
     </div>
+    <script>
+        //入口函数
+        $(function () {
+            // 发送ajax请求返回的数据
+            $.ajax({
+                url: BigNew.user_detail,
+                type: 'get',
+                success: function (backData) {
+                    // $('#inputEmail1').val(backData.data.username)
+                    // $('#inputEmail2').val(backData.data.nickname)
+                    // $('#inputEmail3').val(backData.data.email)
+                    // $('#inputEmail4').val(backData.data.password)
+                    // 用for循环遍历
+                    for (let key in backData.data) {
+                        $('.' + key).val(backData.data[key])
+                    }
+                    $('.user_pic').attr('src', backData.data.userPic)
+
+                }
+            });
+            //图片预览
+            //1.给file表单元素注册onchange事件
+            $('#exampleInputFile').change(function () {
+                //1.2 获取用户选择的图片
+                let file = this.files[0];
+                //1.3 将文件转为src路径
+                let url = URL.createObjectURL(file);
+                //1.4 将url路径赋值给img标签的src
+                $('.col-sm-10>img').attr('src', url);
+            });
+        })
+    </script>
 </body>
 
 </html>

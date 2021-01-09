@@ -46,4 +46,8 @@ $(function () {
     $('.level02 li').click(function () {
         $(this).addClass('active').siblings().removeClass('active')
     })
+    //点击顶部个人中心,侧边栏个人中心高亮
+    $('.user_center_link a').click(function () {
+        $('.level01').last().addClass('active').siblings().removeClass('active')
+    })
 })
