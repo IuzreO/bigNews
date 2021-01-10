@@ -155,6 +155,28 @@
                 //调用loadData函数
                 loadData(1)
             })
+            //委托注册事件
+            $('tbody').on('click', '.delete', function () {
+                let id = $(this).data().id
+                $.ajax({
+                    url: BigNew.article_delete,
+                    type: 'post',
+                    data: {
+                        id
+                    },
+                    success: function (backData) {
+                        if (confirm('确定删除')) {
+                            if ($('tbody tr').length == 1) {
+                                alert('删除成功');
+                                loadData(nowPage - 1)
+                            } else {
+                                loadData(nowPage)
+                                alert('删除成功');
+                            }
+                        }
+                    }
+                });
+            })
         })
     </script>
 </body>
