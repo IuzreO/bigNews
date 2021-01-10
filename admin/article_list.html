@@ -13,6 +13,7 @@
     <script src="./libs/jquery-1.12.4.min.js"></script>
     <!-- 引入模板引擎js文件 -->
     <script src="./libs/template-web.js"></script>
+    <script src="./js/http.js"></script>
 </head>
 
 <body>
@@ -72,6 +73,62 @@
             </div>
         </div>
     </div>
+    <!-- 文章分类模版引擎 -->
+    <script id='tempType' type="text/html">
+        <option value="">所有分类</option>
+        {{each data v}}
+        <option value="{{v.id}}">{{v.name}}</option>
+        {{/each}}
+    </script>
+    <!-- 文章搜索模板引擎 -->
+    <script id='tempList' type="text/html">
+        {{each data.data v}}
+        <tr>
+            <td>{{v.title}}</td>
+            <td>{{v.author}}</td>
+            <td>{{v.category}}</td>
+            <td class="text-center">{{v.date}}</td>
+            <td class="text-center">{{v.state}}</td>
+            <td class="text-center">
+                <a href="article_edit.html" class="btn btn-default btn-xs" data-id="{{v.id}}">编辑</a>
+                <a href="javascript:void(0);" class="btn btn-danger btn-xs delete" data-id="{{v.id}}">删除</a>
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+    <script>
+        //入口函数
+        $(function () {
+            //发送文章类别请求
+            $.ajax({
+                url: BigNew.category_list,
+                type: 'get',
+                success: function (backData) {
+                    //渲染到页面
+                    let res = template('tempType', backData)
+                    $('#selCategory').html(res)
+                }
+            });
+            //发送文章列表请求
+            $.ajax({
+                url: BigNew.article_query,
+                type: 'get',
+                data: {
+                    key: '',
+                    type: '',
+                    state: '',
+                    page: '1',
+                    perpage: '5'
+                },
+                success: function (backData) {
+                    console.log(backData);
+                    let res = template('tempList', backData)
+                    console.log(res);
+                    $('tbody').html(res)
+                }
+            });
+        })
+    </script>
 </body>
 
 </html>
