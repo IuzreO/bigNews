@@ -16,6 +16,8 @@ $(function () {
                     $('.' + key).val(backData.data[key])
                 }
                 $('.user_pic').attr('src', backData.data.userPic)
+                //- 通过parent可以找到父窗口的window
+                // - 所以parent.$就是通过jquery找父窗口里的元素
                 parent.$('.user_info img').attr('src', backData.data.userPic)
                 parent.$('.user_info span').text(backData.data.nickname)
                 parent.$('.user_center_link img').attr('src', backData.data.userPic)

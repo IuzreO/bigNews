@@ -56,6 +56,8 @@ $(function () {
                                 }
                             })
                     } else {
+                        //方法二
+                        // $('tbody tr').empty()
                         $('#noData').show().prev().hide()
                     }
                     //判断callback是否为函数
@@ -87,6 +89,7 @@ $(function () {
             success: function (backData) {
                 if (confirm('确定删除')) {
                     if ($('tbody tr').length == 1) {
+                        //方法二if ($('tbody tr').length == 1 && nowPage!=1) 
                         loadData(nowPage, function (backData) {
                             //调用回调函数,判断条数是否为0,为0则调用nowPage,不用0则nowPage-1
                             backData.data.totalCount == 0 ? loadData(nowPage) : loadData(nowPage - 1)
@@ -98,5 +101,8 @@ $(function () {
                 }
             }
         });
+    })
+    $('#release_btn').click(function (e) {
+        parent.$('.level02 li').eq(1).addClass('active').siblings().removeClass('active')
     })
 })
