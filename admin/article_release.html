@@ -10,10 +10,20 @@
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/iconfont.css">
     <link rel="stylesheet" href="css/main.css">
+    <!-- 导入jeDate文件 -->
+    <link rel="stylesheet" href="../jedate-6.5.0/skin/jedate.css">
+    <link rel="stylesheet" href="../jedate-6.5.0/test/jeDate-test.css">
+    <script src="../jedate-6.5.0/src/jedate.js"></script>
+    <!-- 导入富文本编辑器JS文件 -->
+    <script src="https://unpkg.com/wangeditor/dist/wangEditor.min.js"></script>
     <!-- jq -->
     <script src="./libs/jquery-1.12.4.min.js"></script>
     <!-- 模板引擎 -->
     <script src="./libs/template-web.js"></script>
+    <!-- 导入http文件 -->
+    <script src="./js/http.js"></script>
+    <!-- 引入JS文件 -->
+    <script src="./js/article_release.js"></script>
 </head>
 
 <body>
@@ -26,7 +36,7 @@
                 <div class="form-group">
                     <label for="inputTitle" class="col-sm-2 control-label">文章标题：</label>
                     <div class="col-sm-10">
-                        <input type="text" name="title" class="form-control title" id="inputTitle" value="文章标题文字">
+                        <input type="text" name="title" class="form-control title" id="inputTitle" value="">
                     </div>
                 </div>
                 <div class="form-group">
@@ -40,22 +50,22 @@
                     <label for="inputCategory" class="col-sm-2 control-label">文章类别：</label>
                     <div class="col-sm-4">
                         <select class="form-control category" name="categoryId">
-                            <option>类别一</option>
-                            <option>类别二</option>
-                            <option>类别三</option>
-                            <option selected>类别四</option>
-                            <option>类别五</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">发布时间：</label>
                     <div class="col-sm-4">
+                        <input type="text" class="jeinput" id="testico" placeholder="YYYY-MM-DD" name="date">
+                        <div class="icons jebtns"
+                            onclick="jeDate('#testico',{trigger:false,format: 'YYYY-MM-DD',zIndex:299999})">
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">文章内容：</label>
-                    <div class="col-sm-10">
+                    <div class="col-sm-10 wangeditor">
+
                     </div>
                 </div>
                 <div class="form-group">
@@ -67,6 +77,12 @@
             </form>
         </div>
     </div>
+    <!-- 文章分类下拉框模版引擎 -->
+    <script id="actcileList" type="text/html">
+        {{each data v}}
+        <option value="{{v.id}}">{{v.name}}</option>
+        {{/each}}
+    </script>
 </body>
 
 </html>
