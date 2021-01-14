@@ -12,7 +12,7 @@ $(function () {
     });
     //定义一个变量表示当前页面
     let nowPage = 1
-    //发送文章列表请求
+    // 发送文章列表请求
     // 封装成函数loadData
     function loadData(page, callback) {
         //把点击的页面赋值给当前页面
