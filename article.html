@@ -64,6 +64,8 @@
             <div class="article_con">
             </div>
             <div class="article_links">
+                上一篇： <a href="#"></a><br>
+                下一篇： <a href="#"></a>
             </div>
 
             <form action="" class="comment_form">
@@ -81,36 +83,9 @@
             </form>
 
             <div class="comment_count">
-                4条评论
             </div>
             <div class="comment_list_con">
                 <div class="comment_detail_list">
-                    <div class="person_pic fl">乔</div>
-                    <div class="name_time fl"><b>虚竹</b><span>4小时前</span></div>
-                    <div class="comment_text fl">
-                        遏制茅台酒价格过快上涨，多渠道供给，就不一定要买，租茅台酒也可以的，租售同权。开发共有产权茅台酒，让老百姓喝得起茅台酒，饮者有其酒。
-                    </div>
-                </div>
-                <div class="comment_detail_list">
-                    <div class="person_pic fl">段</div>
-                    <div class="name_time fl"><b>虚竹</b><span>4小时前</span></div>
-                    <div class="comment_text fl">
-                        遏制茅台酒价格过快上涨，多渠道供给，就不一定要买，租茅台酒也可以的，租售同权。开发共有产权茅台酒，让老百姓喝得起茅台酒，饮者有其酒。
-                    </div>
-                </div>
-                <div class="comment_detail_list">
-                    <div class="person_pic fl">虚</div>
-                    <div class="name_time fl"><b>虚竹</b><span>4小时前</span></div>
-                    <div class="comment_text fl">
-                        遏制茅台酒价格过快上涨，多渠道供给，就不一定要买，租茅台酒也可以的，租售同权。开发共有产权茅台酒，让老百姓喝得起茅台酒，饮者有其酒。
-                    </div>
-                </div>
-                <div class="comment_detail_list">
-                    <div class="person_pic fl">王</div>
-                    <div class="name_time fl"><b>虚竹</b><span>4小时前</span></div>
-                    <div class="comment_text fl">
-                        遏制茅台酒价格过快上涨，多渠道供给，就不一定要买，租茅台酒也可以的，租售同权。开发共有产权茅台酒，让老百姓喝得起茅台酒，饮者有其酒。
-                    </div>
                 </div>
             </div>
         </div>
@@ -201,10 +176,24 @@
             <li><a href="./article.html?id={{v.id}}">{{@ v.intro}}</a></li>
             {{/each}}
     </script>
+    <!-- 文章评论模板引擎 -->
+    <script id="comment_detail_list" type="text/html">
+        {{each data}}
+        <div class="comment_detail_list">
+            <div class="person_pic fl">{{$value.author[0]}}</div>
+            <div class="name_time fl"><b>{{$value.author}}</b><span>{{$value.date}}</span></div>
+            <div class="comment_text fl">
+               {{$value.content}}
+            </div>
+        </div>
+        {{/each}}
+    </script>
     <script>
         //入口函数
         $(function () {
+            //获取文章ID
             let id = location.href.split('=')[1]
+            console.log(id);
             $.ajax({
                 url: 'http://localhost:8080/api/v1/index/article',
                 type: 'get',
@@ -220,7 +209,6 @@
                     分类: ${backData.data.category}            
                     阅读: (${backData.data.read})                                                                                              评论: (${backData.data.comments})`)
                         $('.article_con').html(backData.data.content)
-                        console.log(backData)
                         $('.breadcrumb a')
                             .eq(1).text(backData.data.category)
                             .attr('href', `./list.html?id=${backData.data.categoryId}`)
@@ -254,6 +242,51 @@
                     } else {
                         location.href = './index.html'
                     }
+                    //文章评论渲染
+                    $.ajax({
+                        url: 'http://localhost:8080/api/v1/index/get_comment',
+                        type: 'get',
+                        dataType: 'json',
+                        data: {
+                            articleId: backData.data.categoryId
+                        },
+                        success: function (backData) {
+                            console.log(backData);
+                            let res = template('comment_detail_list', backData)
+                            $('.comment_list_con').html(res)
+                            $('.comment_count').text(backData.data.length + '条评论')
+                        }
+                    })
+                    //文章评论功能实现
+                    //给评论设置点击事件
+                    $('.comment_sub').click(function (e) {
+                        //阻止默认跳转
+                        e.preventDefault()
+                        //获取表单数据
+                        let author = $('.comment_name').val()
+                        let content = $('.comment_input').val()
+                        let articleId = backData.data.categoryId
+                        console.log(author, content, articleId);
+                        $.ajax({
+                            url: 'http://localhost:8080/api/v1/index/post_comment',
+                            type: 'post',
+                            dataType: 'json',
+                            data: {
+                                author,
+                                content,
+                                articleId
+                            },
+                            success: function (backData) {
+                                if (backData.code == 201) {
+                                    alert('发表成功');
+                                    location.href = './article.html?id=' + id
+                                } else {
+                                    alert('发表失败');
+                                }
+                            }
+                        });
+                    })
+
                 }
             })
         })
