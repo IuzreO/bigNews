@@ -32,7 +32,6 @@ $(function () {
     editor.create()
     //发布按钮设置点击事件
     //封装成函数
-
     function send(state) {
         //创建FormData对象：参数是表单dom对象
         let fd = new FormData($('#form')[0])
