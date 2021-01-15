@@ -156,7 +156,7 @@
             <a href="article.html?id={{ $value.id }}" class="list_pic"><img src="{{ $value.cover }}" alt=""></a>
             <h4><a href="article.html?id={{ $value.id }}">{{ $value.title }} </a></h4>
             <p>
-                {{ $value.intro }}
+                {{@ $value.intro }}
             </p>
             <div class="new_info">
                 <span>标签：{{ $value.category }}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<i class="fa fa-eye"></i>&nbsp;阅读( {{ $value.read }}
@@ -184,12 +184,19 @@
                     },
                     success: function (backData) {
                         console.log(backData);
-                        let res = template('articleList', backData)
-                        $('.left_con').html(`
+                        if (backData.data.totalCount == 0) {
+                            $('.left_con').html(`
+                    <div class="list_title">
+                    <h3>${value}</h3></div>`+'暂无数据'
+                            )
+                        } else {
+                            let res = template('articleList', backData)
+                            $('.left_con').html(`
                     <div class="list_title">
                     <h3>${value}</h3></div>`
-                            + res
-                        )
+                                + res
+                            )
+                        }
                     }
                 })
             } else if (key.indexOf('categoryId') != -1) {
