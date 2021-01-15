@@ -1,13 +1,4 @@
 $(function () {
-    //最新咨询板块实现
-    $.ajax({
-        url: 'http://localhost:8080/api/v1/index/latest',
-        type: 'get',
-        success: function (backData) {
-            let res = template('actciles', backData)
-            $('.common_news').html(res)
-        }
-    });
     //一周热门排行板块实现
     $.ajax({
         url: 'http://localhost:8080/api/v1/index/rank',
@@ -36,21 +27,14 @@ $(function () {
 
         }
     })
-    //热点图模块实现
-    $.ajax({
-        url: 'http://localhost:8080/api/v1/index/hotpic',
-        type: 'get',
-        success: function (backData) {
-            let res = template('focus_list', backData)
-            $('.focus_list').html(res)
-        }
-    })
     //文章类型模块实现
     $.ajax({
         url: 'http://localhost:8080/api/v1/index/category',
         type: 'get',
         success: function (backData) {
+            //下拉框
             $('.level_two').html(template('selectMenu', backData))
+            //菜单栏   
             $('.left_menu').html(template('left_menu', backData))
         }
     })

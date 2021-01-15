@@ -181,9 +181,46 @@
     <!-- 文章类型模板引擎 菜单栏-->
     <script id="left_menu" type="text/html">
        {{each data v}}
-               <li><a href="./list.html?id={{v.id}}">{{v.name}}</a></li>
+               <li><a href="./list.html?categoryId={{v.id}}">{{v.name}}</a></li>
        {{/each}}
 </script>
+    <script>
+        $(function () {
+            //最新咨询板块实现
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/index/latest',
+                type: 'get',
+                success: function (backData) {
+                    let res = template('actciles', backData)
+                    $('.common_news').html(res)
+                }
+            });
+            //热点图模块实现
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/index/hotpic',
+                type: 'get',
+                success: function (backData) {
+                    let res = template('focus_list', backData)
+                    $('.focus_list').html(res)
+                }
+            })
+            //给搜索按钮添加点击事件
+            $('.search_btn').click(function () {
+                let key = $('.search_txt').val().trim()
+                if (key == ('')) {
+                    key = $('.search_txt')[0].placeholder
+                }
+                location.href = './list.html?search=' + key
+            })
+            //按下空格触发点击事件
+            $('.search_txt').keyup(function (e) {
+                if (e.keyCode == 13) {
+                    $('.search_btn').click()
+                }
+            })
+        })
+
+    </script>
 </body>
 
 </html>

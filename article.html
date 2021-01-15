@@ -131,13 +131,13 @@
     <script id="selectMenu" type="text/html">
             <li class="up"></li>
            {{each data v}}
-                   <li><a href="./list.html?id={{v.id}}">{{v.name}}</a></li>
+                   <li><a href="./list.html?categoryId={{v.id}}">{{v.name}}</a></li>
            {{/each}}
    </script>
     <!-- 文章类型模板引擎 菜单栏-->
     <script id="left_menu" type="text/html">
             {{each data v}}
-                    <li><a href="./list.html?id={{v.id}}">{{v.name}}</a></li>
+                    <li><a href="./list.html?categoryId={{v.id}}">{{v.name}}</a></li>
             {{/each}}
      </script>
     <!-- 一周热门排行模板引擎 -->
